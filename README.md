@@ -15,3 +15,4 @@ Current endpoints:
 ## DELETE
 `/researches/{researchId}` - deletes research with researchId <br/>
 `/researches/samples/{sampleId}` - deletes sample with sampleId <br/>
+In the future, the API will be expanded to include registration, authentication and authorization. 
