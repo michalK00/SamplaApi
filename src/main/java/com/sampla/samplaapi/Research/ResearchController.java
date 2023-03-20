@@ -81,4 +81,10 @@ public class ResearchController {
         JsonNode researchPatchedNode = patch.apply(researchNode);
         return objectMapper.treeToValue(researchPatchedNode, ResearchDto.class);
     }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteResearch(@PathVariable Long id){
+        researchService.deleteResearch(id);
+        return ResponseEntity.noContent().build();
+    }
 }

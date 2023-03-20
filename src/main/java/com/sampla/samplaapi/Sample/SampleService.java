@@ -33,6 +33,10 @@ public class SampleService {
         Sample jobOffer = sampleDtoMapper.map(sampleDto);
         sampleRepository.save(jobOffer);
     }
+
+    public void deleteSample(Long id) {
+        sampleRepository.deleteById(id);
+    }
 //    public Page<SampleBriefDto> getSamples(Pageable paging, Long researchId){
 //        return sampleRepository.findAllByResearch_Id(paging, researchId).map(sampleBriefDtoMapper::map);
 //    }

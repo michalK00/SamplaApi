@@ -14,6 +14,7 @@ import java.net.URI;
 
 
 @RestController
+@RequestMapping("/researches")
 public class SampleController {
 
     private final SampleService sampleService;
@@ -24,11 +25,11 @@ public class SampleController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/researches/samples/{sampleId}")
+    @GetMapping("/samples/{sampleId}")
     ResponseEntity<SampleDto> getSample(@PathVariable Long sampleId){
         return sampleService.getSampleById(sampleId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-    @PostMapping("/researches/{researchId}")
+    @PostMapping("/{researchId}")
     ResponseEntity<SampleDto> addSample(@PathVariable Long researchId, @RequestBody SampleDto sample){
         sample.setResearchId(researchId);
         SampleDto savedSample = sampleService.saveSample(sample);
@@ -38,10 +39,10 @@ public class SampleController {
                 .toUri();
         return ResponseEntity.created(savedSampleUri).body(savedSample);
     }
-    @PatchMapping("/researches/samples/{id}")
-    ResponseEntity<?> updateSample(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
+    @PatchMapping("/samples/{sampleId}")
+    ResponseEntity<?> updateSample(@PathVariable Long sampleId, @RequestBody JsonMergePatch patch) {
         try {
-            SampleDto sampleDto = sampleService.getSampleById(id).orElseThrow();
+            SampleDto sampleDto = sampleService.getSampleById(sampleId).orElseThrow();
             SampleDto samplePatched = applyPatch(sampleDto, patch);
             sampleService.updateSample(samplePatched);
         } catch (JsonPatchException | JsonProcessingException e) {
@@ -56,5 +57,11 @@ public class SampleController {
         JsonNode sampleNode = objectMapper.valueToTree(sample);
         JsonNode samplePatchedNode = patch.apply(sampleNode);
         return objectMapper.treeToValue(samplePatchedNode, SampleDto.class);
+    }
+
+    @DeleteMapping("/samples/{sampleId}")
+    ResponseEntity<?> deleteResearch(@PathVariable Long sampleId){
+        sampleService.deleteSample(sampleId);
+        return ResponseEntity.noContent().build();
     }
 }

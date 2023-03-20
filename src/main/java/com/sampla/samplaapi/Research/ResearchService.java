@@ -48,4 +48,8 @@ public class ResearchService {
         Research research = researchDtoMapper.map(dto);
         researchRepository.save(research);
     }
+
+    void deleteResearch(Long researchId){
+        researchRepository.deleteById(researchId);
+    }
 }
