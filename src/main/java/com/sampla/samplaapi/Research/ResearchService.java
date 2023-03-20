@@ -24,23 +24,28 @@ public class ResearchService {
         this.researchBriefDtoMapper = researchBriefDtoMapper;
     }
 
-    public Optional<ResearchDto> getResearchById(Long id){
+    Optional<ResearchDto> getResearchById(Long id){
         return researchRepository.findById(id)
                 .map(researchDtoMapper::map);
     }
-    public Page<ResearchBriefDto> getAllResearchesBrief(Pageable paging){
+    Page<ResearchBriefDto> getAllResearchesBrief(Pageable paging){
         return researchRepository.findAll(paging)
                 .map(researchBriefDtoMapper::map);
     }
-    public Page<ResearchBriefDto> getAllResearchesBriefWhereStatusIs(String label ,Pageable paging){
+    Page<ResearchBriefDto> getAllResearchesBriefWhereStatusIs(String label ,Pageable paging){
         Research.Status status = Research.Status.valueOfLabel(label);
         return researchRepository.findAllByStatus(status, paging)
                 .map(researchBriefDtoMapper::map);
     }
 
-    public ResearchBriefDto saveResearchBrief(ResearchBriefDto dto) {
+    ResearchBriefDto saveResearchBrief(ResearchBriefDto dto) {
         Research research = researchBriefDtoMapper.map(dto);
         Research savedResearch = researchRepository.save(research);
         return researchBriefDtoMapper.map(savedResearch);
+    }
+
+    void updateResearch(ResearchDto dto){
+        Research research = researchDtoMapper.map(dto);
+        researchRepository.save(research);
     }
 }

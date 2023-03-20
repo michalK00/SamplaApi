@@ -1,30 +1,35 @@
 package com.sampla.samplaapi.Sample;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.sampla.samplaapi.Sample.SampleDto.SampleDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
+import java.util.NoSuchElementException;
 import java.net.URI;
+
 
 @RestController
 public class SampleController {
 
     private final SampleService sampleService;
+    private final ObjectMapper objectMapper;
 
-    public SampleController(SampleService sampleService) {
+    public SampleController(SampleService sampleService, ObjectMapper objectMapper) {
         this.sampleService = sampleService;
+        this.objectMapper = objectMapper;
     }
 
-
-    @GetMapping("/researches/{researchId}/{sampleId}")
-    public ResponseEntity<SampleDto> getSample(@PathVariable Long researchId, @PathVariable Long sampleId){
-        return sampleService.findSampleById(sampleId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/researches/samples/{sampleId}")
+    ResponseEntity<SampleDto> getSample(@PathVariable Long sampleId){
+        return sampleService.getSampleById(sampleId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/researches/{researchId}")
-    public ResponseEntity<SampleDto> addSample(@PathVariable Long researchId, @RequestBody SampleDto sample){
+    ResponseEntity<SampleDto> addSample(@PathVariable Long researchId, @RequestBody SampleDto sample){
         sample.setResearchId(researchId);
         SampleDto savedSample = sampleService.saveSample(sample);
         URI savedSampleUri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -32,5 +37,24 @@ public class SampleController {
                 .buildAndExpand(savedSample.getId())
                 .toUri();
         return ResponseEntity.created(savedSampleUri).body(savedSample);
+    }
+    @PatchMapping("/researches/samples/{id}")
+    ResponseEntity<?> updateSample(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
+        try {
+            SampleDto sampleDto = sampleService.getSampleById(id).orElseThrow();
+            SampleDto samplePatched = applyPatch(sampleDto, patch);
+            sampleService.updateSample(samplePatched);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    private SampleDto applyPatch(SampleDto sample, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+        JsonNode sampleNode = objectMapper.valueToTree(sample);
+        JsonNode samplePatchedNode = patch.apply(sampleNode);
+        return objectMapper.treeToValue(samplePatchedNode, SampleDto.class);
     }
 }
