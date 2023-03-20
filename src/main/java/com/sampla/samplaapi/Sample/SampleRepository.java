@@ -1,7 +1,7 @@
 package com.sampla.samplaapi.Sample;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SampleRepository extends CrudRepository<Sample, Long> {
+public interface SampleRepository extends JpaRepository<Sample, Long> {
 
 }
