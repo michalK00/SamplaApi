@@ -1,5 +1,6 @@
 package com.sampla.samplaapi.Research;
 
+import com.sampla.samplaapi.Research.ResearchDto.ResearchBriefDto;
 import com.sampla.samplaapi.Research.ResearchDto.ResearchDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,22 +28,22 @@ public class ResearchController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping
-    ResponseEntity<Page<ResearchDto>> getResearches(
+    ResponseEntity<Page<ResearchBriefDto>> getResearches(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "None") String statusFilter){
         Pageable paging = PageRequest.of(page, size);
-        Page<ResearchDto> returnedPage;
+        Page<ResearchBriefDto> returnedPage;
         if(statusFilter.equals("None")){
-            returnedPage = researchService.getAllResearches(paging);
+            returnedPage = researchService.getAllResearchesBrief(paging);
         } else {
-            returnedPage = researchService.getAllResearchesWhereStatusIs(statusFilter, paging);
+            returnedPage = researchService.getAllResearchesBriefWhereStatusIs(statusFilter, paging);
         }
         return ResponseEntity.ok(returnedPage);
     }
     @PostMapping
-    ResponseEntity<ResearchDto> saveResearch(@RequestBody ResearchDto research) {
-        ResearchDto savedResearch = researchService.saveResearch(research);
+    ResponseEntity<ResearchBriefDto> saveResearch(@RequestBody ResearchBriefDto research) {
+        ResearchBriefDto savedResearch = researchService.saveResearchBrief(research);
         URI savedResearchURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedResearch.getId())

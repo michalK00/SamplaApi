@@ -1,47 +1,46 @@
 package com.sampla.samplaapi.Research;
 
+import com.sampla.samplaapi.Research.ResearchDto.ResearchBriefDto;
+import com.sampla.samplaapi.Research.ResearchDto.ResearchBriefDtoMapper;
 import com.sampla.samplaapi.Research.ResearchDto.ResearchDto;
 import com.sampla.samplaapi.Research.ResearchDto.ResearchDtoMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public class ResearchService {
 
     private final ResearchRepository researchRepository;
     private final ResearchDtoMapper researchDtoMapper;
+    private final ResearchBriefDtoMapper researchBriefDtoMapper;
 
-    public ResearchService(ResearchRepository researchRepository, ResearchDtoMapper researchDtoMapper) {
+    public ResearchService(ResearchRepository researchRepository,
+                           ResearchDtoMapper researchDtoMapper,
+                           ResearchBriefDtoMapper researchBriefDtoMapper) {
         this.researchRepository = researchRepository;
         this.researchDtoMapper = researchDtoMapper;
+        this.researchBriefDtoMapper = researchBriefDtoMapper;
     }
 
     public Optional<ResearchDto> getResearchById(Long id){
         return researchRepository.findById(id)
                 .map(researchDtoMapper::map);
     }
-    public List<ResearchDto> getAllResearches(){
-        return researchRepository.findAll()
-                .stream()
-                .map(researchDtoMapper::map)
-                .toList();
-    }
-    public Page<ResearchDto> getAllResearches(Pageable paging){
+    public Page<ResearchBriefDto> getAllResearchesBrief(Pageable paging){
         return researchRepository.findAll(paging)
-                .map(researchDtoMapper::map);
+                .map(researchBriefDtoMapper::map);
     }
-    public Page<ResearchDto> getAllResearchesWhereStatusIs(String label ,Pageable paging){
+    public Page<ResearchBriefDto> getAllResearchesBriefWhereStatusIs(String label ,Pageable paging){
         Research.Status status = Research.Status.valueOfLabel(label);
         return researchRepository.findAllByStatus(status, paging)
-                .map(researchDtoMapper::map);
+                .map(researchBriefDtoMapper::map);
     }
 
-    public ResearchDto saveResearch(ResearchDto dto) {
-        Research research = researchDtoMapper.map(dto);
+    public ResearchBriefDto saveResearchBrief(ResearchBriefDto dto) {
+        Research research = researchBriefDtoMapper.map(dto);
         Research savedResearch = researchRepository.save(research);
-        return researchDtoMapper.map(savedResearch);
+        return researchBriefDtoMapper.map(savedResearch);
     }
 }

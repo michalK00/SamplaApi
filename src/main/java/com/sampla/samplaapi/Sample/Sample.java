@@ -1,5 +1,6 @@
 package com.sampla.samplaapi.Sample;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sampla.samplaapi.Research.Research;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class Sample {
     private String analysisMethod;
     @ManyToOne(optional = false)
     @JoinColumn(name = "research_id")
+    @JsonIgnore
     private Research research;
     private LocalDate created;
     private LocalDate updated;
@@ -38,6 +40,15 @@ public class Sample {
 
         StorageType(String label) {
             this.label = label;
+        }
+
+        public static StorageType valueOfLabel(String label) {
+            for (StorageType s : values()) {
+                if (s.label.equals(label)) {
+                    return s;
+                }
+            }
+            return null;
         }
     }
 }

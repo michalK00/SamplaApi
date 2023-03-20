@@ -1,5 +1,6 @@
 package com.sampla.samplaapi.Research;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sampla.samplaapi.Sample.Sample;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Research {
     private String customer;
     private String researchDescription;
     @OneToMany(mappedBy = "research")
+    @JsonIgnore
     private List<Sample> sampleList;
     @Enumerated(EnumType.STRING)
     private Status status;

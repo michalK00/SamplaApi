@@ -1,6 +1,6 @@
 package com.sampla.samplaapi.Research.ResearchDto;
 
-import com.sampla.samplaapi.Sample.Sample;
+import com.sampla.samplaapi.Sample.SampleDto.SampleBriefDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class ResearchDto {
     private String name;
     private String customer;
     private String researchDescription;
-    private List<Sample> sampleList;
+    private List<SampleBriefDto> sampleList;
     private String status;
     private LocalDate created;
     private LocalDate updated;
