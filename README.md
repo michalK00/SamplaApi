@@ -14,5 +14,5 @@ Current endpoints:
 `/researches/samples/{sampleId}` -  updates sample with provided parameters (requires only parameters with changes) <br/>
 ## DELETE
 `/researches/{researchId}` - deletes research with researchId <br/>
-`/researches/samples/{sampleId}` - deletes sample with sampleId <br/>
+`/researches/samples/{sampleId}` - deletes sample with sampleId <br/><br/>
 In the future, the API will be expanded to include registration, authentication and authorization. 
