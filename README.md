@@ -1,6 +1,6 @@
 # SamplaApi
 
-Simple API created to serve as backend for SamplaApp. It allows for sample and reseach management.
+A simple API created to act as a backend for SamplaApp. It allows for sample and reseach management.
 Current endpoints:
 ## GET
 #### Research
