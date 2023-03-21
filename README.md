@@ -6,6 +6,7 @@ Current endpoints:
 `/researches` - returns paginated list of researches in brief <br/>
 `/researches/{researchId}` - returns all information about certain research <br/>
 `/researches/samples/{sampleId}` - returns all information about certain sample <br/> 
+`/researches/{researchId}/samples` - returns paginated list of samples with the provided researchId in brief
 ## POST
 `/researches` - adds research with provided parameters and gives response of created entity at `/researches/{researchId}` <br/>
 `/researches/{researchId}` - adds sample with provided parameters and assigns it to the provided researchId <br/>
