@@ -3,10 +3,14 @@
 Simple API created to serve as backend for SamplaApp. It allows for sample and reseach management.
 Current endpoints:
 ## GET
-`/researches` - returns paginated list of researches in brief <br/>
+#### Research
+`/researches` - returns list of researches in brief <br/>
+`/researches/paginated` - returns paginated list of researches in brief <br/>
 `/researches/{researchId}` - returns all information about certain research <br/>
+#### Sample
+`/researches/{researchId}/samples` - returns list of samples of a certain research in brief <br/>
+`/researches/{researchId}/samples/paginated` - returns paginated list of samples with the provided researchId in brief <br/> 
 `/researches/samples/{sampleId}` - returns all information about certain sample <br/> 
-`/researches/{researchId}/samples` - returns paginated list of samples with the provided researchId in brief
 ## POST
 `/researches` - adds research with provided parameters and gives response of created entity at `/researches/{researchId}` <br/>
 `/researches/{researchId}` - adds sample with provided parameters and assigns it to the provided researchId <br/>
