@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -36,6 +37,11 @@ public class ResearchController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping
+    ResponseEntity<List<ResearchBriefDto>> getResearches(){
+        List<ResearchBriefDto> returnedList = researchService.getAllResearchesBrief();
+        return ResponseEntity.ok(returnedList);
+    }
+    @GetMapping("/paging")
     ResponseEntity<Page<ResearchBriefDto>> getResearches(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,

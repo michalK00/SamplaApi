@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SampleRepository extends JpaRepository<Sample, Long> {
 
-    Page<Sample> findAllByResearch_Id(Pageable paging, Long researchId);
+    Page<Sample> findAllByResearch_Id(Long researchId, Pageable paging);
+    Page<Sample> findAllByResearch_Id(Long researchId);
 }

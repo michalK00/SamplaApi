@@ -1,9 +1,14 @@
 package com.sampla.samplaapi.Sample;
 
+import com.sampla.samplaapi.Sample.SampleDto.SampleBriefDto;
 import com.sampla.samplaapi.Sample.SampleDto.SampleBriefDtoMapper;
 import com.sampla.samplaapi.Sample.SampleDto.SampleDto;
 import com.sampla.samplaapi.Sample.SampleDto.SampleDtoMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,7 +42,10 @@ public class SampleService {
     public void deleteSample(Long id) {
         sampleRepository.deleteById(id);
     }
-//    public Page<SampleBriefDto> getSamples(Pageable paging, Long researchId){
-//        return sampleRepository.findAllByResearch_Id(paging, researchId).map(sampleBriefDtoMapper::map);
-//    }
+    public Page<SampleBriefDto> getSampleBriefs(Pageable paging, Long researchId){
+        return sampleRepository.findAllByResearch_Id(researchId, paging).map(sampleBriefDtoMapper::map);
+    }
+    public List<SampleBriefDto> getSampleBriefs(Long researchId){
+        return sampleRepository.findAllByResearch_Id(researchId).stream().map(sampleBriefDtoMapper::map).toList();
+    }
 }

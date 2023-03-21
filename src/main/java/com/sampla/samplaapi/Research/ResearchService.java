@@ -7,6 +7,8 @@ import com.sampla.samplaapi.Research.ResearchDto.ResearchDtoMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,12 @@ public class ResearchService {
     Page<ResearchBriefDto> getAllResearchesBrief(Pageable paging){
         return researchRepository.findAll(paging)
                 .map(researchBriefDtoMapper::map);
+    }
+    List<ResearchBriefDto> getAllResearchesBrief(){
+        return researchRepository.findAll()
+                .stream()
+                .map(researchBriefDtoMapper::map)
+                .toList();
     }
     Page<ResearchBriefDto> getAllResearchesBriefWhereStatusIs(String label ,Pageable paging){
         Research.Status status = Research.Status.valueOfLabel(label);

@@ -2,13 +2,20 @@ package com.sampla.samplaapi.Sample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import com.sampla.samplaapi.Sample.SampleDto.SampleBriefDto;
 import com.sampla.samplaapi.Sample.SampleDto.SampleDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.net.URI;
 
@@ -28,6 +35,21 @@ public class SampleController {
     @GetMapping("/samples/{sampleId}")
     ResponseEntity<SampleDto> getSample(@PathVariable Long sampleId){
         return sampleService.getSampleById(sampleId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("/{researchId}/samples")
+    ResponseEntity<List<SampleBriefDto>> getResearches(@PathVariable Long researchId){
+        List<SampleBriefDto> returnedList = sampleService.getSampleBriefs(researchId);
+        return ResponseEntity.ok(returnedList);
+    }
+    @GetMapping("/{researchId}/samples/paging")
+    ResponseEntity<Page<SampleBriefDto>> getSampleBriefs(@PathVariable Long researchId,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "8") int size,
+                                                         @RequestParam(defaultValue = "sampleCode") String sortBy){
+
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<SampleBriefDto> returnedPage = sampleService.getSampleBriefs(paging, researchId);
+        return ResponseEntity.ok(returnedPage);
     }
     @PostMapping("/{researchId}")
     ResponseEntity<SampleDto> addSample(@PathVariable Long researchId, @RequestBody SampleDto sample){
