@@ -4,28 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.sampla.samplaapi.sample.sampleDto.SampleBriefDto;
 import com.sampla.samplaapi.sample.sampleDto.SampleDto;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatchException;
-
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.net.URI;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -95,9 +87,5 @@ public class SampleController {
         return ResponseEntity.noContent().build();
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    List<String> handleMethodArgumentNotValidException(ConstraintViolationException ex) {
-        return ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
-    }
+
 }
