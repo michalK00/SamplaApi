@@ -16,37 +16,35 @@ public class SampleDtoMapper {
     }
 
     public SampleDto map(Sample sample){
-        return new SampleDto(
-                sample.getId(),
-                sample.getSampleCode(),
-                sample.getStorage(),
-                sample.getStorageType().label,
-                sample.getSolvent(),
-                sample.getDilution(),
-                sample.getMaterial(),
-                sample.getAnalysisMethod(),
-                sample.getResearch().getId(),
-                sample.getResearch().getName(),
-                sample.getCreated(),
-                sample.getUpdated()
-        );
+        return SampleDto.builder()
+                .id(sample.getId())
+                .sampleCode(sample.getSampleCode())
+                .storage(sample.getStorage())
+                .storageType(sample.getStorageType())
+                .solvent(sample.getSolvent())
+                .dilution(sample.getDilution())
+                .material(sample.getMaterial())
+                .analysisMethod(sample.getAnalysisMethod())
+                .researchId(sample.getResearch().getId())
+                .researchName(sample.getResearch().getName())
+                .created(sample.getCreated())
+                .updated(sample.getUpdated())
+                .build();
     }
     public Sample map(SampleDto dto){
-        Sample sample = new Sample();
-        sample.setId(dto.getId());
-        sample.setSampleCode(dto.getSampleCode());
-        sample.setStorage(dto.getStorage());
-        sample.setStorageType(StorageType.valueOfLabel(dto.getStorageType()));
-        sample.setSolvent(dto.getSolvent());
-        sample.setDilution(dto.getDilution());
-        sample.setMaterial(dto.getMaterial());
-        sample.setMaterial(dto.getMaterial());
-        sample.setAnalysisMethod(dto.getAnalysisMethod());
-        Research research = researchRepository.findById(dto.getResearchId()).orElseThrow();
-        sample.setResearch(research);
-        sample.setUpdated(dto.getUpdated());
-        sample.setCreated(dto.getCreated());
-        return sample;
+        return Sample.builder()
+                .id(dto.getId())
+                .sampleCode(dto.getSampleCode())
+                .storage(dto.getStorage())
+                .storageType(dto.getStorageType())
+                .solvent(dto.getSolvent())
+                .dilution(dto.getDilution())
+                .material(dto.getMaterial())
+                .analysisMethod(dto.getAnalysisMethod())
+                .research(researchRepository.findById(dto.getResearchId()).orElseThrow())
+                .updated(dto.getUpdated())
+                .created(dto.getCreated())
+                .build();
     }
 
 }

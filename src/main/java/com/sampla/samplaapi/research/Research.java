@@ -3,21 +3,28 @@ package com.sampla.samplaapi.research;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sampla.samplaapi.sample.Sample;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.*;
 
+import java.lang.annotation.Annotation;
 import java.time.LocalDate;
 import java.util.List;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Research {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
     private String customer;
     private String researchDescription;
@@ -26,8 +33,11 @@ public class Research {
     private List<Sample> sampleList;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @PastOrPresent
     private LocalDate created;
+    @PastOrPresent
     private LocalDate updated;
+
 
     public enum Status{
         COMPLETED("Completed"), IN_PROGRESS("In Progress");

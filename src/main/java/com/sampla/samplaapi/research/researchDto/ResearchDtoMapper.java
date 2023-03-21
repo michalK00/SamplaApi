@@ -3,6 +3,7 @@ package com.sampla.samplaapi.research.researchDto;
 import com.sampla.samplaapi.research.Research;
 import com.sampla.samplaapi.sample.sampleDto.SampleBriefDtoMapper;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,34 +14,33 @@ public class ResearchDtoMapper {
         this.sampleBriefDtoMapper = sampleBriefDtoMapper;
     }
 
-    public ResearchDto map(Research research){
-        return new ResearchDto(
-                research.getId(),
-                research.getName(),
-                research.getCustomer(),
-                research.getResearchDescription(),
-                research.getSampleList().stream()
+    public ResearchDto map(@Valid Research research){
+        return ResearchDto.builder()
+                .id(research.getId())
+                .name(research.getName())
+                .customer(research.getCustomer())
+                .researchDescription(research.getResearchDescription())
+                .sampleList(research.getSampleList().stream()
                         .map(sampleBriefDtoMapper::map)
-                        .toList(),
-                research.getStatus().label,
-                research.getCreated(),
-                research.getUpdated()
-        );
+                        .toList())
+                .status(research.getStatus())
+                .created(research.getCreated())
+                .updated(research.getUpdated())
+                .build();
     }
-    public Research map(ResearchDto dto){
-        Research research = new Research();
-        research.setId(dto.getId());
-        research.setName(dto.getName());
-        research.setCustomer(dto.getCustomer());
-        research.setResearchDescription(dto.getResearchDescription());
-
-        research.setSampleList(dto.getSampleList().stream()
+    public Research map(@Valid ResearchDto dto){
+        return Research.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .customer(dto.getCustomer())
+                .researchDescription(dto.getResearchDescription())
+                .sampleList(dto.getSampleList().stream()
                         .map(sampleBriefDtoMapper::map)
-                        .toList());
-        research.setStatus(Research.Status.valueOfLabel(dto.getStatus()));
-        research.setCreated(dto.getCreated());
-        research.setUpdated(dto.getUpdated());
-        return research;
+                        .toList())
+                .status(dto.getStatus())
+                .created(dto.getCreated())
+                .updated(dto.getUpdated())
+                .build();
     }
 
 }

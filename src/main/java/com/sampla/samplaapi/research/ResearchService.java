@@ -4,6 +4,7 @@ import com.sampla.samplaapi.research.researchDto.ResearchBriefDto;
 import com.sampla.samplaapi.research.researchDto.ResearchBriefDtoMapper;
 import com.sampla.samplaapi.research.researchDto.ResearchDto;
 import com.sampla.samplaapi.research.researchDto.ResearchDtoMapper;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,13 @@ public class ResearchService {
                 .map(researchBriefDtoMapper::map);
     }
 
-    ResearchBriefDto saveResearchBrief(ResearchBriefDto dto) {
+    ResearchBriefDto saveResearchBrief(@Valid ResearchBriefDto dto) {
         Research research = researchBriefDtoMapper.map(dto);
         Research savedResearch = researchRepository.save(research);
         return researchBriefDtoMapper.map(savedResearch);
     }
 
-    void updateResearch(ResearchDto dto){
+    void updateResearch(@Valid ResearchDto dto){
         Research research = researchDtoMapper.map(dto);
         researchRepository.save(research);
     }

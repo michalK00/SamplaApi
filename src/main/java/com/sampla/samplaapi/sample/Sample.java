@@ -3,10 +3,12 @@ package com.sampla.samplaapi.sample;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sampla.samplaapi.research.Research;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
+
 import java.time.LocalDate;
 
 @Getter
@@ -14,15 +16,19 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Sample {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Sample has to have a name")
     private String sampleCode;
+    @PositiveOrZero(message = "Storage must be non-negative")
     private double storage;
     @Enumerated(EnumType.STRING)
     private StorageType storageType;
     private String solvent;
+    @PositiveOrZero(message = "Dilution must be non-negative")
     private double dilution;
     private String material;
     private String analysisMethod;
@@ -30,7 +36,9 @@ public class Sample {
     @JoinColumn(name = "research_id")
     @JsonIgnore
     private Research research;
+    @PastOrPresent(message = "Created date can't be in the future")
     private LocalDate created;
+    @PastOrPresent(message = "Updated date can't be in the future")
     private LocalDate updated;
 
     public enum StorageType{

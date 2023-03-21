@@ -7,16 +7,23 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.sampla.samplaapi.research.researchDto.ResearchBriefDto;
 import com.sampla.samplaapi.research.researchDto.ResearchDto;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/researches")
@@ -58,7 +65,7 @@ public class ResearchController {
         return ResponseEntity.ok(returnedPage);
     }
     @PostMapping
-    ResponseEntity<ResearchBriefDto> saveResearch(@RequestBody ResearchBriefDto research) {
+    ResponseEntity<ResearchBriefDto> saveResearch(@Valid @RequestBody ResearchBriefDto research) {
 
         ResearchBriefDto savedResearch = researchService.saveResearchBrief(research);
 
@@ -93,4 +100,6 @@ public class ResearchController {
         researchService.deleteResearch(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

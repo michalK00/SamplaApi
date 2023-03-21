@@ -4,6 +4,7 @@ import com.sampla.samplaapi.sample.sampleDto.SampleBriefDto;
 import com.sampla.samplaapi.sample.sampleDto.SampleBriefDtoMapper;
 import com.sampla.samplaapi.sample.sampleDto.SampleDto;
 import com.sampla.samplaapi.sample.sampleDto.SampleDtoMapper;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,15 +29,15 @@ public class SampleService {
         return sampleRepository.findById(id).map(sampleDtoMapper::map);
     }
 
-    SampleDto saveSample(SampleDto dto){
+    SampleDto saveSample(@Valid SampleDto dto){
         Sample sample = sampleDtoMapper.map(dto);
         Sample savedSample = sampleRepository.save(sample);
         return sampleDtoMapper.map(savedSample);
     }
 
-     void updateSample(SampleDto sampleDto) {
-        Sample jobOffer = sampleDtoMapper.map(sampleDto);
-        sampleRepository.save(jobOffer);
+     void updateSample(@Valid SampleDto sampleDto) {
+        Sample sample = sampleDtoMapper.map(sampleDto);
+        sampleRepository.save(sample);
     }
 
     public void deleteSample(Long id) {
