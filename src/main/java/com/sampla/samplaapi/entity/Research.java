@@ -1,14 +1,11 @@
-package com.sampla.samplaapi.research;
+package com.sampla.samplaapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sampla.samplaapi.sample.Sample;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDate;
 import java.util.List;
 

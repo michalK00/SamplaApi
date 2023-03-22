@@ -1,9 +1,10 @@
-package com.sampla.samplaapi.sample;
+package com.sampla.samplaapi.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.sampla.samplaapi.sample.sampleDto.SampleBriefDto;
-import com.sampla.samplaapi.sample.sampleDto.SampleDto;
+import com.sampla.samplaapi.dto.SampleBriefDto;
+import com.sampla.samplaapi.dto.SampleDto;
+import com.sampla.samplaapi.service.SampleService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,8 +83,14 @@ public class SampleController {
     }
 
     @DeleteMapping("/samples/{sampleId}")
-    ResponseEntity<?> deleteResearch(@PathVariable Long sampleId){
+    ResponseEntity<?> deleteSample(@PathVariable Long sampleId){
         sampleService.deleteSample(sampleId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{researchId}")
+    ResponseEntity<?> deleteAllSamplesOfOneResearch(@PathVariable Long researchId){
+        sampleService.deleteAllSamples(researchId);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,7 +1,6 @@
-package com.sampla.samplaapi.sample.sampleDto;
+package com.sampla.samplaapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,9 @@
-package com.sampla.samplaapi.sample;
+package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.sample.sampleDto.SampleBriefDto;
-import com.sampla.samplaapi.sample.sampleDto.SampleBriefDtoMapper;
-import com.sampla.samplaapi.sample.sampleDto.SampleDto;
-import com.sampla.samplaapi.sample.sampleDto.SampleDtoMapper;
+import com.sampla.samplaapi.entity.Sample;
+import com.sampla.samplaapi.repository.SampleRepository;
+import com.sampla.samplaapi.dto.SampleBriefDto;
+import com.sampla.samplaapi.dto.SampleDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,17 +25,17 @@ public class SampleService {
         this.sampleBriefDtoMapper = sampleBriefDtoMapper;
     }
 
-    Optional<SampleDto> getSampleById(Long id){
+    public Optional<SampleDto> getSampleById(Long id){
         return sampleRepository.findById(id).map(sampleDtoMapper::map);
     }
 
-    SampleDto saveSample(@Valid SampleDto dto){
+    public SampleDto saveSample(@Valid SampleDto dto){
         Sample sample = sampleDtoMapper.map(dto);
         Sample savedSample = sampleRepository.save(sample);
         return sampleDtoMapper.map(savedSample);
     }
 
-     void updateSample(@Valid SampleDto sampleDto) {
+    public void updateSample(@Valid SampleDto sampleDto) {
         Sample sample = sampleDtoMapper.map(sampleDto);
         sampleRepository.save(sample);
     }
@@ -48,5 +48,9 @@ public class SampleService {
     }
     public List<SampleBriefDto> getSampleBriefs(Long researchId){
         return sampleRepository.findAllByResearch_Id(researchId).stream().map(sampleBriefDtoMapper::map).toList();
+    }
+
+    public void deleteAllSamples(Long researchId) {
+        sampleRepository.deleteAllByResearch_Id(researchId);
     }
 }

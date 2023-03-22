@@ -1,29 +1,24 @@
-package com.sampla.samplaapi.research;
+package com.sampla.samplaapi.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.sampla.samplaapi.research.researchDto.ResearchBriefDto;
-import com.sampla.samplaapi.research.researchDto.ResearchDto;
-import jakarta.validation.ConstraintViolationException;
+import com.sampla.samplaapi.dto.*;
+import com.sampla.samplaapi.rest.exceptions.ResearchDeletionException;
+import com.sampla.samplaapi.service.ResearchService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/researches")
@@ -97,7 +92,16 @@ public class ResearchController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteResearch(@PathVariable Long id){
-        researchService.deleteResearch(id);
+        try {
+            ResearchDto researchDto = researchService.getResearchById(id).orElseThrow();
+            if (!researchDto.getSampleList().isEmpty()) {
+                throw new ResearchDeletionException("Cannot delete research with samples");
+            }
+            researchService.deleteResearch(id);
+        }catch (NoSuchElementException e ) {
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.noContent().build();
     }
 

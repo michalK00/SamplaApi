@@ -1,5 +1,6 @@
-package com.sampla.samplaapi.exceptions;
+package com.sampla.samplaapi.rest;
 
+import com.sampla.samplaapi.rest.exceptions.ResearchDeletionException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -12,11 +13,16 @@ import java.util.List;
 
 
 @ControllerAdvice
-public class ErrorHandler extends ResponseEntityExceptionHandler {
+public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     List<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
+    }
+
+    @ExceptionHandler(ResearchDeletionException.class)
+    ResponseEntity<?> handleResearchDeletionException(ResearchDeletionException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

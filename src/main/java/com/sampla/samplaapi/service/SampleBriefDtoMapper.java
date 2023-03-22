@@ -1,8 +1,8 @@
-package com.sampla.samplaapi.sample.sampleDto;
+package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.research.Research;
-import com.sampla.samplaapi.research.ResearchRepository;
-import com.sampla.samplaapi.sample.Sample;
+import com.sampla.samplaapi.dto.SampleBriefDto;
+import com.sampla.samplaapi.repository.ResearchRepository;
+import com.sampla.samplaapi.entity.Sample;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.sampla.samplaapi.research.researchDto;
+package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.research.Research;
-import com.sampla.samplaapi.sample.sampleDto.SampleBriefDtoMapper;
+import com.sampla.samplaapi.dto.ResearchDto;
+import com.sampla.samplaapi.entity.Research;
 
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;

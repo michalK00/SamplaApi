@@ -1,11 +1,9 @@
-package com.sampla.samplaapi.sample.sampleDto;
+package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.research.Research;
-import com.sampla.samplaapi.research.ResearchRepository;
-import com.sampla.samplaapi.sample.Sample;
+import com.sampla.samplaapi.dto.SampleDto;
+import com.sampla.samplaapi.repository.ResearchRepository;
+import com.sampla.samplaapi.entity.Sample;
 import org.springframework.stereotype.Service;
-
-import static com.sampla.samplaapi.sample.Sample.StorageType;
 
 @Service
 public class SampleDtoMapper {
