@@ -1,6 +1,6 @@
 package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.dto.ResearchDto;
+import com.sampla.samplaapi.dto.base.ResearchDto;
 import com.sampla.samplaapi.entity.Research;
 
 import jakarta.validation.Valid;

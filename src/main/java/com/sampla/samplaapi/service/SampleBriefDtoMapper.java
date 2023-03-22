@@ -1,6 +1,6 @@
 package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.dto.SampleBriefDto;
+import com.sampla.samplaapi.dto.brief.SampleBriefDto;
 import com.sampla.samplaapi.repository.ResearchRepository;
 import com.sampla.samplaapi.entity.Sample;
 import jakarta.validation.Valid;

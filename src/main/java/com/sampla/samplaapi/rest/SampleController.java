@@ -2,9 +2,11 @@ package com.sampla.samplaapi.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.sampla.samplaapi.dto.SampleBriefDto;
-import com.sampla.samplaapi.dto.SampleDto;
+import com.sampla.samplaapi.dto.brief.SampleBriefDto;
+import com.sampla.samplaapi.dto.base.SampleDto;
+import com.sampla.samplaapi.dto.create.CreateSampleDto;
 import com.sampla.samplaapi.service.SampleService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,9 +55,8 @@ public class SampleController {
         return ResponseEntity.ok(returnedPage);
     }
     @PostMapping("/{researchId}")
-    ResponseEntity<SampleDto> addSample(@Valid @PathVariable Long researchId, @RequestBody SampleDto sample){
-        sample.setResearchId(researchId);
-        SampleDto savedSample = sampleService.saveSample(sample);
+    ResponseEntity<SampleDto> createSample(@PathVariable Long researchId,@Valid @RequestBody CreateSampleDto sample){
+        SampleDto savedSample = sampleService.createSample(sample, researchId);
         URI savedSampleUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("{id}")
                 .buildAndExpand(savedSample.getId())
@@ -87,8 +88,8 @@ public class SampleController {
         sampleService.deleteSample(sampleId);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/{researchId}")
+    @Transactional
+    @DeleteMapping("/{researchId}/samples")
     ResponseEntity<?> deleteAllSamplesOfOneResearch(@PathVariable Long researchId){
         sampleService.deleteAllSamples(researchId);
         return ResponseEntity.noContent().build();

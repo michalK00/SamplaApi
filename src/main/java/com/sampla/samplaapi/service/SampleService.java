@@ -1,9 +1,11 @@
 package com.sampla.samplaapi.service;
 
+import com.sampla.samplaapi.dto.create.CreateSampleDto;
 import com.sampla.samplaapi.entity.Sample;
 import com.sampla.samplaapi.repository.SampleRepository;
-import com.sampla.samplaapi.dto.SampleBriefDto;
-import com.sampla.samplaapi.dto.SampleDto;
+import com.sampla.samplaapi.dto.brief.SampleBriefDto;
+import com.sampla.samplaapi.dto.base.SampleDto;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,19 +20,21 @@ public class SampleService {
     private final SampleRepository sampleRepository;
     private final SampleDtoMapper sampleDtoMapper;
     private final SampleBriefDtoMapper sampleBriefDtoMapper;
+    private final Mappings mappings;
 
-    SampleService(SampleRepository sampleRepository, SampleDtoMapper sampleDtoMapper, SampleBriefDtoMapper sampleBriefDtoMapper) {
+    public SampleService(SampleRepository sampleRepository, SampleDtoMapper sampleDtoMapper, SampleBriefDtoMapper sampleBriefDtoMapper, Mappings mappings) {
         this.sampleRepository = sampleRepository;
         this.sampleDtoMapper = sampleDtoMapper;
         this.sampleBriefDtoMapper = sampleBriefDtoMapper;
+        this.mappings = mappings;
     }
 
     public Optional<SampleDto> getSampleById(Long id){
         return sampleRepository.findById(id).map(sampleDtoMapper::map);
     }
 
-    public SampleDto saveSample(@Valid SampleDto dto){
-        Sample sample = sampleDtoMapper.map(dto);
+    public SampleDto createSample(@Valid CreateSampleDto dto, Long researchId){
+        Sample sample = mappings.map(dto, researchId);
         Sample savedSample = sampleRepository.save(sample);
         return sampleDtoMapper.map(savedSample);
     }
@@ -49,7 +53,7 @@ public class SampleService {
     public List<SampleBriefDto> getSampleBriefs(Long researchId){
         return sampleRepository.findAllByResearch_Id(researchId).stream().map(sampleBriefDtoMapper::map).toList();
     }
-
+    @Transactional
     public void deleteAllSamples(Long researchId) {
         sampleRepository.deleteAllByResearch_Id(researchId);
     }

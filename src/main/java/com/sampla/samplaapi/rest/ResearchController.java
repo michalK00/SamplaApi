@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.sampla.samplaapi.dto.*;
+import com.sampla.samplaapi.dto.base.ResearchDto;
+import com.sampla.samplaapi.dto.brief.ResearchBriefDto;
+import com.sampla.samplaapi.dto.create.CreateResearchDto;
 import com.sampla.samplaapi.rest.exceptions.ResearchDeletionException;
 import com.sampla.samplaapi.service.ResearchService;
 import jakarta.validation.Valid;
@@ -60,9 +62,9 @@ public class ResearchController {
         return ResponseEntity.ok(returnedPage);
     }
     @PostMapping
-    ResponseEntity<ResearchBriefDto> saveResearch(@Valid @RequestBody ResearchBriefDto research) {
+    ResponseEntity<ResearchBriefDto> saveResearch(@Valid @RequestBody CreateResearchDto research) {
 
-        ResearchBriefDto savedResearch = researchService.saveResearchBrief(research);
+        ResearchBriefDto savedResearch = researchService.createResearch(research);
 
         URI savedResearchURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

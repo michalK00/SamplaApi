@@ -1,6 +1,6 @@
 package com.sampla.samplaapi.service;
 
-import com.sampla.samplaapi.dto.SampleDto;
+import com.sampla.samplaapi.dto.base.SampleDto;
 import com.sampla.samplaapi.repository.ResearchRepository;
 import com.sampla.samplaapi.entity.Sample;
 import org.springframework.stereotype.Service;

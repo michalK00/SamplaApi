@@ -1,9 +1,10 @@
 package com.sampla.samplaapi.service;
 
+import com.sampla.samplaapi.dto.create.CreateResearchDto;
 import com.sampla.samplaapi.entity.Research;
 import com.sampla.samplaapi.repository.ResearchRepository;
-import com.sampla.samplaapi.dto.ResearchBriefDto;
-import com.sampla.samplaapi.dto.ResearchDto;
+import com.sampla.samplaapi.dto.brief.ResearchBriefDto;
+import com.sampla.samplaapi.dto.base.ResearchDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +15,13 @@ import java.util.Optional;
 
 @Service
 public class ResearchService {
-
+    private final Mappings mappings;
     private final ResearchRepository researchRepository;
     private final ResearchDtoMapper researchDtoMapper;
     private final ResearchBriefDtoMapper researchBriefDtoMapper;
 
-    public ResearchService(ResearchRepository researchRepository,
-                           ResearchDtoMapper researchDtoMapper,
-                           ResearchBriefDtoMapper researchBriefDtoMapper) {
+    public ResearchService(Mappings mappings, ResearchRepository researchRepository, ResearchDtoMapper researchDtoMapper, ResearchBriefDtoMapper researchBriefDtoMapper) {
+        this.mappings = mappings;
         this.researchRepository = researchRepository;
         this.researchDtoMapper = researchDtoMapper;
         this.researchBriefDtoMapper = researchBriefDtoMapper;
@@ -47,8 +47,8 @@ public class ResearchService {
                 .map(researchBriefDtoMapper::map);
     }
 
-    public ResearchBriefDto saveResearchBrief(@Valid ResearchBriefDto dto) {
-        Research research = researchBriefDtoMapper.map(dto);
+    public ResearchBriefDto createResearch(@Valid CreateResearchDto dto) {
+        Research research = mappings.map(dto);
         Research savedResearch = researchRepository.save(research);
         return researchBriefDtoMapper.map(savedResearch);
     }

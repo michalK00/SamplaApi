@@ -25,8 +25,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    ResponseEntity<?> handleOtherExceptions(Exception ex) {
-        return ResponseEntity.internalServerError().build();
-    }
+//    @ExceptionHandler(Exception.class)
+//    ResponseEntity<?> handleOtherExceptions(Exception ex) {
+//        return ResponseEntity.internalServerError().build();
+//    }
 }
