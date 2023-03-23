@@ -25,7 +25,8 @@ public class Research {
     private String name;
     private String customer;
     private String researchDescription;
-    @OneToMany(mappedBy = "research")
+    @OneToMany(mappedBy = "research" )
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<Sample> sampleList;
     @Enumerated(EnumType.STRING)

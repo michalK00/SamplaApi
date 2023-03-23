@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @ControllerAdvice
@@ -23,6 +24,11 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     @ExceptionHandler(ResearchDeletionException.class)
     ResponseEntity<?> handleResearchDeletionException(ResearchDeletionException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity<?> handleNoSuchElementException(NoSuchElementException ex) {
+        return ResponseEntity.notFound().build();
     }
 
 //    @ExceptionHandler(Exception.class)

@@ -11,6 +11,7 @@ import com.sampla.samplaapi.dto.update.UpdateSampleDto;
 import com.sampla.samplaapi.entity.Research;
 import com.sampla.samplaapi.entity.Sample;
 import com.sampla.samplaapi.repository.ResearchRepository;
+import com.sampla.samplaapi.repository.SampleRepository;
 import com.sampla.samplaapi.service.time.LocalDateService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,15 @@ public class Mappings {
 
     LocalDateService localDateService;
     ResearchRepository researchRepository;
+    SampleRepository sampleRepository;
 
-    public Mappings(LocalDateService localDateService, ResearchRepository researchRepository) {
+    public Mappings(LocalDateService localDateService, ResearchRepository researchRepository, SampleRepository sampleRepository) {
         this.localDateService = localDateService;
         this.researchRepository = researchRepository;
+        this.sampleRepository = sampleRepository;
     }
 
-    public Sample map(CreateSampleDto dto, Long researchId) {
+    public Sample mapCreateToEntity(CreateSampleDto dto, Long researchId) {
         return Sample.builder()
                 .sampleCode(dto.getSampleCode())
                 .research(researchRepository.findById(researchId).orElseThrow())
@@ -34,8 +37,10 @@ public class Mappings {
                 .updated(localDateService.now())
                 .build();
     }
-    public Sample map(@Valid UpdateSampleDto dto){
+    public Sample mapUpdateToEntity(@Valid UpdateSampleDto dto, Long entityId){
+        Sample entity = sampleRepository.findById(entityId).orElseThrow();
         return Sample.builder()
+                .id(entity.getId())
                 .sampleCode(dto.getSampleCode())
                 .storage(dto.getStorage())
                 .storageType(dto.getStorageType())
@@ -43,10 +48,13 @@ public class Mappings {
                 .dilution(dto.getDilution())
                 .material(dto.getMaterial())
                 .analysisMethod(dto.getAnalysisMethod())
+                .research(entity.getResearch())
+                .created(entity.getCreated())
+                .updated(localDateService.now())
                 .build();
     }
 
-    public Research map(@Valid CreateResearchDto dto){
+    public Research mapCreateToEntity(@Valid CreateResearchDto dto){
         return Research.builder()
                 .name(dto.getName())
                 .status(Research.Status.IN_PROGRESS)
@@ -54,15 +62,20 @@ public class Mappings {
                 .updated(localDateService.now())
                 .build();
     }
-    public Research map(@Valid UpdateResearchDto dto){
+    public Research mapUpdateToEntity(@Valid UpdateResearchDto dto, Long entityId){
+        Research entity = researchRepository.findById(entityId).orElseThrow();
         return Research.builder()
+                .id(entity.getId())
                 .name(dto.getName())
                 .customer(dto.getCustomer())
                 .researchDescription(dto.getResearchDescription())
+                .sampleList(entity.getSampleList())
                 .status(dto.getStatus())
+                .created(entity.getCreated())
+                .updated(localDateService.now())
                 .build();
     }
-    public SampleBriefDto mapToBrief(@Valid Sample sample){
+    public SampleBriefDto mapEntityToBrief(@Valid Sample sample){
         return SampleBriefDto.builder()
                 .id(sample.getId())
                 .sampleCode(sample.getSampleCode())
@@ -73,7 +86,7 @@ public class Mappings {
                 .build();
     }
 
-    public SampleDto mapToNormal(@Valid Sample sample){
+    public SampleDto mapEntityToNormal(@Valid Sample sample){
         return SampleDto.builder()
                 .id(sample.getId())
                 .sampleCode(sample.getSampleCode())
@@ -91,7 +104,7 @@ public class Mappings {
     }
 
 
-    public ResearchBriefDto mapToBrief(@Valid Research research){
+    public ResearchBriefDto mapEntityToBrief(@Valid Research research){
         return ResearchBriefDto.builder()
                 .id(research.getId())
                 .name(research.getName())
@@ -100,20 +113,18 @@ public class Mappings {
                 .build();
     }
 
-    public ResearchDto mapToNormal(@Valid Research research){
+    public ResearchDto mapEntityToNormal(@Valid Research research){
         return ResearchDto.builder()
                 .id(research.getId())
                 .name(research.getName())
                 .customer(research.getCustomer())
                 .researchDescription(research.getResearchDescription())
                 .sampleList(research.getSampleList().stream()
-                        .map(this::mapToBrief)
+                        .map(this::mapEntityToBrief)
                         .toList())
                 .status(research.getStatus())
                 .created(research.getCreated())
                 .updated(research.getUpdated())
                 .build();
     }
-
-
 }

@@ -1,10 +1,9 @@
 package com.sampla.samplaapi.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.sampla.samplaapi.dto.brief.SampleBriefDto;
 import com.sampla.samplaapi.dto.base.SampleDto;
 import com.sampla.samplaapi.dto.create.CreateSampleDto;
+import com.sampla.samplaapi.dto.update.UpdateSampleDto;
 import com.sampla.samplaapi.service.SampleService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -15,11 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonpatch.JsonPatchException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.net.URI;
 
 
@@ -28,13 +23,10 @@ import java.net.URI;
 public class SampleController {
 
     private final SampleService sampleService;
-    private final ObjectMapper objectMapper;
 
-    public SampleController(SampleService sampleService, ObjectMapper objectMapper) {
+    public SampleController(SampleService sampleService) {
         this.sampleService = sampleService;
-        this.objectMapper = objectMapper;
     }
-
     @GetMapping("/samples/{sampleId}")
     ResponseEntity<SampleDto> getSample(@PathVariable Long sampleId){
         return sampleService.getSampleById(sampleId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
@@ -43,16 +35,6 @@ public class SampleController {
     ResponseEntity<List<SampleBriefDto>> getResearches(@PathVariable Long researchId){
         List<SampleBriefDto> returnedList = sampleService.getSampleBriefs(researchId);
         return ResponseEntity.ok(returnedList);
-    }
-    @GetMapping("/{researchId}/samples/paging")
-    ResponseEntity<Page<SampleBriefDto>> getSampleBriefs(@PathVariable Long researchId,
-                                                         @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "8") int size,
-                                                         @RequestParam(defaultValue = "sampleCode") String sortBy){
-
-        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<SampleBriefDto> returnedPage = sampleService.getSampleBriefs(paging, researchId);
-        return ResponseEntity.ok(returnedPage);
     }
     @PostMapping("/{researchId}")
     ResponseEntity<SampleDto> createSample(@PathVariable Long researchId,@Valid @RequestBody CreateSampleDto sample){
@@ -63,26 +45,12 @@ public class SampleController {
                 .toUri();
         return ResponseEntity.created(savedSampleUri).body(savedSample);
     }
-    @PatchMapping("/samples/{sampleId}")
-    ResponseEntity<?> updateSample(@PathVariable Long sampleId, @RequestBody JsonMergePatch patch) {
-        try {
-            SampleDto sampleDto = sampleService.getSampleById(sampleId).orElseThrow();
-            SampleDto samplePatched = applyPatch(sampleDto, patch);
-            sampleService.updateSample(samplePatched);
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+
+    @PutMapping("/samples/{sampleId}")
+    ResponseEntity<?> updateSample(@PathVariable Long sampleId, @Valid @RequestBody UpdateSampleDto sample){
+        sampleService.updateSample(sample, sampleId);
         return ResponseEntity.noContent().build();
     }
-
-    private SampleDto applyPatch(SampleDto sample, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
-        JsonNode sampleNode = objectMapper.valueToTree(sample);
-        JsonNode samplePatchedNode = patch.apply(sampleNode);
-        return objectMapper.treeToValue(samplePatchedNode, SampleDto.class);
-    }
-
     @DeleteMapping("/samples/{sampleId}")
     ResponseEntity<?> deleteSample(@PathVariable Long sampleId){
         sampleService.deleteSample(sampleId);
@@ -94,6 +62,38 @@ public class SampleController {
         sampleService.deleteAllSamples(researchId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{researchId}/samples/paging")
+    ResponseEntity<Page<SampleBriefDto>> getSampleBriefs(@PathVariable Long researchId,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "8") int size,
+                                                         @RequestParam(defaultValue = "sampleCode") String sortBy){
+
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<SampleBriefDto> returnedPage = sampleService.getSampleBriefs(paging, researchId);
+        return ResponseEntity.ok(returnedPage);
+    }
+//    @PatchMapping("/samples/{sampleId}")
+//    ResponseEntity<?> updateSample(@PathVariable Long sampleId, @RequestBody JsonMergePatch patch) {
+//        try {
+//            UpdateSampleDto sampleDto = mapping.mapNormalToUpdate(sampleService.getSampleById(sampleId).orElseThrow());
+//            UpdateSampleDto samplePatched = applyPatch(sampleDto, patch);
+//
+//            sampleService.updateSample(samplePatched);
+//        } catch (JsonPatchException | JsonProcessingException e) {
+//            return ResponseEntity.internalServerError().build();
+//        }
+//        return ResponseEntity.noContent().build();
+//    }
+
+
+//    private UpdateSampleDto applyPatch(UpdateSampleDto sample, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+//        JsonNode sampleNode = objectMapper.valueToTree(sample);
+//        JsonNode samplePatchedNode = patch.apply(sampleNode);
+//        return objectMapper.treeToValue(samplePatchedNode, UpdateSampleDto.class);
+//    }
+
+
 
 
 }

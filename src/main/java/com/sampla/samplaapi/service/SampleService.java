@@ -1,6 +1,7 @@
 package com.sampla.samplaapi.service;
 
 import com.sampla.samplaapi.dto.create.CreateSampleDto;
+import com.sampla.samplaapi.dto.update.UpdateSampleDto;
 import com.sampla.samplaapi.entity.Sample;
 import com.sampla.samplaapi.repository.SampleRepository;
 import com.sampla.samplaapi.dto.brief.SampleBriefDto;
@@ -18,29 +19,25 @@ import java.util.Optional;
 public class SampleService {
 
     private final SampleRepository sampleRepository;
-    private final SampleDtoMapper sampleDtoMapper;
-    private final SampleBriefDtoMapper sampleBriefDtoMapper;
     private final Mappings mappings;
 
-    public SampleService(SampleRepository sampleRepository, SampleDtoMapper sampleDtoMapper, SampleBriefDtoMapper sampleBriefDtoMapper, Mappings mappings) {
+    public SampleService(SampleRepository sampleRepository, Mappings mappings) {
         this.sampleRepository = sampleRepository;
-        this.sampleDtoMapper = sampleDtoMapper;
-        this.sampleBriefDtoMapper = sampleBriefDtoMapper;
         this.mappings = mappings;
     }
 
     public Optional<SampleDto> getSampleById(Long id){
-        return sampleRepository.findById(id).map(sampleDtoMapper::map);
+        return sampleRepository.findById(id).map(mappings::mapEntityToNormal);
     }
 
     public SampleDto createSample(@Valid CreateSampleDto dto, Long researchId){
-        Sample sample = mappings.map(dto, researchId);
+        Sample sample = mappings.mapCreateToEntity(dto, researchId);
         Sample savedSample = sampleRepository.save(sample);
-        return sampleDtoMapper.map(savedSample);
+        return mappings.mapEntityToNormal(savedSample);
     }
 
-    public void updateSample(@Valid SampleDto sampleDto) {
-        Sample sample = sampleDtoMapper.map(sampleDto);
+    public void updateSample(@Valid UpdateSampleDto updateSampleDto, Long sampleId) {
+        Sample sample = mappings.mapUpdateToEntity(updateSampleDto, sampleId);
         sampleRepository.save(sample);
     }
 
@@ -48,10 +45,10 @@ public class SampleService {
         sampleRepository.deleteById(id);
     }
     public Page<SampleBriefDto> getSampleBriefs(Pageable paging, Long researchId){
-        return sampleRepository.findAllByResearch_Id(researchId, paging).map(sampleBriefDtoMapper::map);
+        return sampleRepository.findAllByResearch_Id(researchId, paging).map(mappings::mapEntityToBrief);
     }
     public List<SampleBriefDto> getSampleBriefs(Long researchId){
-        return sampleRepository.findAllByResearch_Id(researchId).stream().map(sampleBriefDtoMapper::map).toList();
+        return sampleRepository.findAllByResearch_Id(researchId).stream().map(mappings::mapEntityToBrief).toList();
     }
     @Transactional
     public void deleteAllSamples(Long researchId) {
