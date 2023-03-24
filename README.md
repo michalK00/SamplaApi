@@ -14,10 +14,12 @@ Current endpoints:
 ## POST
 `/researches` - adds research with provided parameters and gives response of created entity at `/researches/{researchId}` <br/>
 `/researches/{researchId}` - adds sample with provided parameters and assigns it to the provided researchId <br/>
-## PATCH
-`/researches/{researchId}` - updates research with provided parameters (requires only parameters with changes) <br/>
-`/researches/samples/{sampleId}` -  updates sample with provided parameters (requires only parameters with changes) <br/>
+## PUT
+`/researches/{researchId}` - updates research <br/>
+`/researches/samples/{sampleId}` -  updates sample  <br/>
 ## DELETE
 `/researches/{researchId}` - deletes research with researchId <br/>
-`/researches/samples/{sampleId}` - deletes sample with sampleId <br/><br/>
+`/researches/samples/{sampleId}` - deletes sample with sampleId <br/>
+`/researches/{researchId}/samples` - deletes all samples of a given research <br/>
+<br/>
 In the future, the API will be expanded to include registration, authentication and authorization as well as attatching files and adding todo lists to researches.
