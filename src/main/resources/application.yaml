@@ -1,8 +1,18 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      dialect=org:
+        hibernate:
+          dialect:
+            PostgreSQL81Dialect:
+      ddl-auto: create-drop
     show-sql: true
 
   liquibase:
     change-log: classpath:db/changelog/master.xml
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/samplaapp
+    username: ${USERNAME}
+    password: ${PASSWORD}
+    driver-class-name: org.postgresql.Driver
